@@ -38,7 +38,7 @@ enum XCPrepareAction: String, ExpressibleByArgument {
 /// It fetches the most common commit sha on the
 /// primary repo and finds a historical commit that has artifact on the remote server
 /// Selected sha is saved as a file to let other commands know, which commit artifact is being used
-/// To not introduce unnecessary Xcode steps invalidation, `mdate` of that file is set to a commit date
+/// To not introduce 【unnecessary Xcode steps】 invalidation, `mdate` of that file is set to a commit date
 /// If the 'prepare' action succeds, it prints selected sha to the standard output
 struct XCPrepareMain: ParsableCommand {
 
@@ -66,6 +66,7 @@ struct XCPrepareMain: ParsableCommand {
         defaultSubcommand: Prepare.self
     )
 
+    //Prepare 命令
     struct Prepare: ParsableCommand {
         static var configuration = CommandConfiguration(abstract: "Find the latest commit sha for the Remote Cache.")
 
@@ -96,7 +97,8 @@ struct XCPrepareMain: ParsableCommand {
             XCPrepare(mode, format: format).main()
         }
     }
-
+    
+    //Offline 命令
     struct Offline: ParsableCommand {
         static var configuration = CommandConfiguration(
             abstract: """
@@ -110,7 +112,8 @@ struct XCPrepareMain: ParsableCommand {
             XCPrepare(.offline, format: format).main()
         }
     }
-
+    
+    //Mark 命令
     struct Mark: ParsableCommand {
         static var configuration = CommandConfiguration(abstract: "Mark current sha as XCRemoteCache-ready.")
 
@@ -130,7 +133,8 @@ struct XCPrepareMain: ParsableCommand {
             XCPrepareMark(configuration: configuration, platform: platform, xcode: xcode, commit: commit).main()
         }
     }
-
+    
+    //Config 命令
     struct Config: ParsableCommand {
         static var configuration = CommandConfiguration(abstract: "Print the XCRemoteCache configuration")
 
@@ -141,7 +145,8 @@ struct XCPrepareMain: ParsableCommand {
             XCConfig(format: format).main()
         }
     }
-
+    
+    //Stats 命令
     struct Stats: ParsableCommand {
         static var configuration = CommandConfiguration(
             abstract: "Offline mode - optimistically use the latest sha from the primary branch"
@@ -157,7 +162,8 @@ struct XCPrepareMain: ParsableCommand {
             XCStats(format: format, reset: reset).main()
         }
     }
-
+    
+    //Integrate 命令
     struct Integrate: ParsableCommand {
         static var configuration = CommandConfiguration(
             abstract: "Integrate XCRemoteCache into existing .xcodeproj"

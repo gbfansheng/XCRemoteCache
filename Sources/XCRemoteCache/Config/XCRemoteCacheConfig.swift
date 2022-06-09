@@ -149,7 +149,7 @@ extension XCRemoteCacheConfig {
     /// Merges existing config with the other config and returns a final result
     /// `other` scheme overrides existing configuration
     // swiftlint:disable:next function_body_length
-    func merged(with scheme: ConfigFileScheme) -> XCRemoteCacheConfig {
+    func merged(with scheme: ConfigFileScheme) -> XCRemoteCacheConfig {//合并配置文件
         var merge = self
         merge.mode = scheme.mode ?? mode
         merge.recommendedCacheAddress = scheme.recommendedCacheAddress ?? recommendedCacheAddress
@@ -218,7 +218,7 @@ extension XCRemoteCacheConfig {
 }
 
 /// A scheme of the user-specific overrides of configs
-struct ConfigFileScheme: Decodable {
+struct ConfigFileScheme: Decodable {//配置文件格式
     let mode: Mode?
     let recommendedCacheAddress: String?
     let cacheAddresses: [String]?
@@ -341,7 +341,7 @@ class XCRemoteCacheConfigReader {
     // Reads the final configuration by loading all extra configs
     // until reaching a config that doesn't override `extraConfigurationFile`
     func readConfiguration() throws -> XCRemoteCacheConfig {
-        let rootURL = URL(fileURLWithPath: srcRoot)
+        let rootURL = URL(fileURLWithPath: srcRoot) //项目目录
         let configURL = URL(fileURLWithPath: Self.configurationFile, relativeTo: rootURL)
         let userConfigs = try readUserConfig(configURL)
         var config = XCRemoteCacheConfig(sourceRoot: srcRoot).merged(with: userConfigs)
@@ -373,6 +373,7 @@ class XCRemoteCacheConfigReader {
         guard let configurationString = String(data: configurationData, encoding: .utf8) else {
             throw XCRemoteCacheConfigReaderError.invalidConfiguration
         }
+        //.rcinfo 是yaml，通过yamldecoder解析出，并生成配置信息
         return try yamlDecorer.decode(from: configurationString)
     }
 }
