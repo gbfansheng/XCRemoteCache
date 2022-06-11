@@ -37,8 +37,8 @@ public class XCIntegrate {
     private let output: String?
 
     public init(
-        input: String,
-        mode: Mode,
+        input: String,  // --input
+        mode: Mode,     // 模式 --mode
         configurationsExclude: String,
         configurationsInclude: String,
         targetsExclude: String,
@@ -67,7 +67,7 @@ public class XCIntegrate {
     // swiftlint:disable:next function_body_length
     public func main() {
         do {
-            let env = ProcessInfo.processInfo.environment
+            let env = ProcessInfo.processInfo.environment //进程信息, Foundation
             let fileManager = FileManager.default
             let commandURL = URL(fileURLWithPath: ProcessInfo.processInfo.arguments[0])
             // All binaries (xcprepare, xcprebuild etc.) should be placed next to each other
@@ -128,7 +128,7 @@ public class XCIntegrate {
                 lldbPatcher: lldbPatcher,
                 output: context.output
             )
-            try integrator.run()
+            try integrator.run() //Integrate -> XcodeProjIntegrate
         } catch {
             // XCIntegrate has no fallback
             exit(1, "FATAL: Integrate initialization failed with error: \(error)")

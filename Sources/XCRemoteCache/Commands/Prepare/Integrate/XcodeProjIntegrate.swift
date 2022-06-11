@@ -87,6 +87,7 @@ struct XcodeProjIntegrate: Integrate {
         self.lldbPatcher = lldbPatcher
         self.output = output
 
+        //初始化buildPhase
         prebuildPhase = PBXShellScriptBuildPhase(
             name: "\(Self.BuildStepPrefix)RemoteCache_prebuild",
             inputPaths: [binaries.prebuild.path],
@@ -151,10 +152,12 @@ struct XcodeProjIntegrate: Integrate {
             // require successful preparation
             do {
 
-                // Call xcprepare to probe if XCRemoteCache can be safely used
+                // Call xcprepare to probe if XCRemoteCache can be safely used 使用xcprepare处理
+                // consumerEligibleConfigurations: Debug consumerEligiblePlatforms:iphoneos
+                // 例如：xcremotecache/xcprepare --configuration Debug --platform iphonesimulator
                 let args = ["--configuration"] + consumerEligibleConfigurations + ["--platform"] +
                     consumerEligiblePlatforms
-                let yamlString = try shellGetStdout(
+                let yamlString = try shellGetStdout( // 调用shell，执行xcprepare
                     binaries.prepare.path,
                     args: args,
                     inDir: projectRoot.path,
@@ -182,7 +185,7 @@ struct XcodeProjIntegrate: Integrate {
         // modify .pbxproj
         let xcodeproj = try XcodeProj(path: projectPath)
 
-        for target in xcodeproj.pbxproj.nativeTargets {
+        for target in xcodeproj.pbxproj.nativeTargets {//循环target，插入buildPhases
             guard targetIncludeOracle.shouldInclude(identifier: target.name) else {
                 continue
             }
@@ -209,7 +212,7 @@ struct XcodeProjIntegrate: Integrate {
                 buildConfiguration.buildSettings = finalSettings
             }
 
-            addSharedBuildPhases(target: target, in: xcodeproj.pbxproj)
+            addSharedBuildPhases(target: target, in: xcodeproj.pbxproj) //将buildphases写入.pbxproj
             // Add producer build phase that marks given sha+configuration+platform as "ready to use"
             if case .producer = mode, finalProducerTarget == target.name {
                 addFinalProducerBuildPhases(target: target, in: xcodeproj.pbxproj)

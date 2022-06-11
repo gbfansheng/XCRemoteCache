@@ -138,6 +138,7 @@ public class XCPrepare {
             let fileAccessor = LazyFileAccessor(fileAccessor: FileManager.default)
             let globalCacheSwitcher = FileGlobalCacheSwitcher(context.remoteCommitLocation, fileAccessor: fileAccessor)
 
+            //XCPrepare -> Prepare
             let prepare = Prepare(
                 context: context,
                 gitClient: gitClient,

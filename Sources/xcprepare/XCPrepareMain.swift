@@ -66,6 +66,7 @@ struct XCPrepareMain: ParsableCommand {
         defaultSubcommand: Prepare.self
     )
 
+    //prepare 命令
     struct Prepare: ParsableCommand {
         static var configuration = CommandConfiguration(abstract: "Find the latest commit sha for the Remote Cache.")
 
@@ -158,6 +159,7 @@ struct XCPrepareMain: ParsableCommand {
         }
     }
 
+    //Integrate 命令
     struct Integrate: ParsableCommand {
         static var configuration = CommandConfiguration(
             abstract: "Integrate XCRemoteCache into existing .xcodeproj"
@@ -231,6 +233,7 @@ struct XCPrepareMain: ParsableCommand {
 
 
         func run() throws {
+            //初始化XCIntegrate main()执行
             XCIntegrate(
                 input: input,
                 mode: mode,

@@ -79,7 +79,7 @@ class GitClientImpl: GitClient {
         }
         let remoteBranchID = "\(remote)/\(primary.branch)"
         do {
-            return try git("merge-base", remoteBranchID, "HEAD")
+            return try git("merge-base", remoteBranchID, "HEAD") //查找远端和当前头的共同祖先commit
         } catch {
             throw GitClientError.noCommonShaWithPrimaryRepo(remoteName: remote, error: error)
         }

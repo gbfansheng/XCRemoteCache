@@ -72,22 +72,23 @@ class Prepare: PrepareLogic {
     }
 
     /// Finds the best commit with generated artifacts to use
+    /// 通过远端仓库分支与本地分支的共同祖先分支获得commit id sha，因为远端是可能有缓存的
     func prepare() throws -> PrepareResult {
         do {
             guard fileAccessor.fileExists(atPath: PhaseCacheModeController.xcodeSelectLink.path) else {
                 throw PrepareError.missingXcodeSelectDirectory
             }
-            let commonSha = try gitClient.getCommonPrimarySha()
+            let commonSha = try gitClient.getCommonPrimarySha() //共同分支
 
-            if context.offline {
+            if context.offline { //如果是offline，通过本地获取
                 // Optimistically take first common sha
-                return try enableCommit(sha: commonSha, age: 0)
+                return try enableCommit(sha: commonSha, age: 0) //直接返回
             }
-            // Remove old artifacts from local cache
+            // Remove old artifacts from local cache 删除本地artifacts
             cacheInvalidator.invalidateArtifacts()
 
             // calling `git` is expensive, so optimistically tring the common sha first
-            if try isArtifactAvailable(for: commonSha) {
+            if try isArtifactAvailable(for: commonSha) { //通过网络判断有没有该commonsha的制品
                 return try enableCommit(sha: commonSha, age: 0)
             }
             // Find a list of all potential commits that may have artifacts that can be used
