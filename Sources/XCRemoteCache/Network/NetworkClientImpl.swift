@@ -73,6 +73,7 @@ class NetworkClientImpl: NetworkClient {
     }
 
     func download(_ url: URL, to location: URL, completion: @escaping (Result<Void, NetworkClientError>) -> Void) {
+        print("download invoke")
         var request = URLRequest(url: url)
         setupAuthenticationSignatureIfPresent(&request)
         makeDownloadRequest(request, output: location, completion: completion)

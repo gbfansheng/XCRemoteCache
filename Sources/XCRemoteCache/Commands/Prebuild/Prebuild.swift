@@ -25,6 +25,7 @@ enum PrebuildResult: Equatable {
 }
 
 /// Downloads meta info for a current commit and downloads+unzips the artifact package if fingerprints match
+/// 下载meta，比对fingerpints，下载并解压file？就这么简单？
 class Prebuild {
     private let context: PrebuildContext
     private let networkClient: RemoteNetworkClient
@@ -65,9 +66,10 @@ class Prebuild {
             let meta = try metaReader.read(data: metaData)
             let localDependencies = try remapper.replace(
                 genericPaths: meta.dependencies
-            ).map(URL.init(fileURLWithPath:))
-            let localFingerprint = try generateFingerprint(for: localDependencies)
+            ).map(URL.init(fileURLWithPath:)) //返回string数组，文件地址数组
+            let localFingerprint = try generateFingerprint(for: localDependencies)//计算fingerprint
             if localFingerprint.raw != meta.rawFingerprint {
+                // 比对fingerprint，查看是否存在
                 if context.forceCached {
                     printWarning("""
                         The generated target product is out-of-sync, target sources don't match the XCRemoteCache
@@ -83,10 +85,12 @@ class Prebuild {
                 }
             }
 
+            // 如果存在缓存，则使用
             let artifactPreparationResult = try artifactsOrganizer.prepareArtifactLocationFor(fileKey: meta.fileKey)
             switch artifactPreparationResult {
             case .artifactExists(let artifactDir):
                 infoLog("Artifact exists locally at \(artifactDir)")
+                // 激活aritifact
                 try artifactsOrganizer.activate(extractedArtifact: artifactDir)
             case .preparedForArtifact(let artifactPackage):
                 infoLog("Downloading artifact to \(artifactPackage)")
@@ -97,6 +101,7 @@ class Prebuild {
                 infoLog("Artifact unzipped to \(unzippedURL)")
             }
 
+            // 插件？
             try artifactConsumerPrebuildPlugins.forEach { plugin in
                 try plugin.run(meta: meta)
             }

@@ -28,6 +28,7 @@ public class XCPostbuild {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     public func main() {
+        print("xcpostbuild run")
         let env = ProcessInfo.processInfo.environment
         let fileManager = FileManager.default
         let config: XCRemoteCacheConfig

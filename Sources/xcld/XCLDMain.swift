@@ -55,6 +55,7 @@ public class XCLDMain {
         // TODO: consider using `clang_command` from .rcinfo
         /// concrete clang path should be taken from the current toolchain
         let fallbackCommand = "clang"
+        print("xcld run")
         XCCreateBinary(
             output: outputInput,
             filelist: filelistInput,

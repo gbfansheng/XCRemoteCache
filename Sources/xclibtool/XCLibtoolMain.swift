@@ -65,6 +65,7 @@ public class XCLibtoolMain {
             exit(1, "Unsupported mode. Args: \(args)")
         }
         do {
+            print("xclibtool run")
             try XCLibtool(mode).run()
         } catch {
             exit(1, "Failed with: \(error). Args: \(args)")

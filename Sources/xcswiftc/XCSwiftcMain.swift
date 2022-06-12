@@ -26,6 +26,7 @@ import XCRemoteCache
 public class XCSwiftcMain {
     // swiftlint:disable:next function_body_length
     public func main() {
+        print("xcswiftc run")
         let command = ProcessInfo().processName
         let args = ProcessInfo().arguments
         var objcHeaderOutput: String?

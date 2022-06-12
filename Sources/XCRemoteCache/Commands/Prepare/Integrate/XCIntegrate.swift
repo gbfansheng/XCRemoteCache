@@ -67,6 +67,7 @@ public class XCIntegrate {
     // swiftlint:disable:next function_body_length
     public func main() {
         do {
+            print("xcintegerate run")
             let env = ProcessInfo.processInfo.environment //进程信息, Foundation
             let fileManager = FileManager.default
             let commandURL = URL(fileURLWithPath: ProcessInfo.processInfo.arguments[0])

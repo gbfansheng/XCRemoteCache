@@ -24,6 +24,7 @@ public class XCPrebuild {
 
     // swiftlint:disable:next function_body_length
     public func main() {
+        print("xcprebuild run")
         let env = ProcessInfo.processInfo.environment
         let fileManager = FileManager.default
         let config: XCRemoteCacheConfig
@@ -79,11 +80,12 @@ public class XCPrebuild {
         }
 
         do {
+            // 环境fingerprint
             let envFingerprint = try EnvironmentFingerprintGenerator(
                 configuration: config,
                 env: env,
                 generator: FingerprintAccumulatorImpl(algorithm: MD5Algorithm(), fileManager: fileManager)
-            ).generateFingerprint()
+            ).generateFingerprint() // 直接计算
             let urlBuilder = try URLBuilderImpl(
                 address: context.recommendedCacheAddress,
                 env: env,
@@ -138,6 +140,7 @@ public class XCPrebuild {
             }
             remappers.append(envsRemapper)
             let pathRemapper = DependenciesRemapperComposite(remappers)
+            // 文件fingerprint生成器
             let filesFingerprintGenerator = FingerprintAccumulatorImpl(
                 algorithm: MD5Algorithm(),
                 fileManager: fileManager
@@ -181,6 +184,7 @@ public class XCPrebuild {
                 artifactConsumerPrebuildPlugins: consumerPlugins
             )
 
+            // 触发Prebuild
             let actionResult = try prebuildAction.perform()
             switch actionResult {
             case .incompatible:

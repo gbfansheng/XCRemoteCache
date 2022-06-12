@@ -39,9 +39,11 @@ public class FingerprintAccumulatorImpl: FingerprintAccumulator {
 
     public func append(_ content: URL) throws {
         // TODO: consider reading file in chunks if content file is huge
+        // 读取文件数据
         guard let data = fileManager.contents(atPath: content.path) else {
             throw FingerprintAccumulatorError.missingFile(content)
         }
+        // 算法累加？
         algorithm.add(data)
     }
 
